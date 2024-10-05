@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "个人信息",
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "first-aid-navigation": "../../components/first-aid-navigation/first-aid-navigation",
+    "user-info-box": "./component/userInfoBox",
+    "up-popup": "../../node-modules/uview-plus/components/u-popup/u-popup"
+  }
+}

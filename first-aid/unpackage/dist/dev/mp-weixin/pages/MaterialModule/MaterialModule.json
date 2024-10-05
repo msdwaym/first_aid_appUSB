@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "急救车信息页面",
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "u-button": "../../node-modules/uview-plus/components/u-button/u-button",
+    "first-aid-navigation": "../../components/first-aid-navigation/first-aid-navigation"
+  }
+}

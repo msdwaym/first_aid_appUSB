@@ -1,0 +1,124 @@
+
+page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fff;
+  font-family: arial, verdana, helvetica, 'PingFang SC', 'HanHei SC', STHeitiSC-Light, Microsoft Yahei, sans-serif;
+}
+.register_form {
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  padding: 50rpx 8%;
+  margin-top: 145rpx;
+}
+.register_form_input {
+  width: 100%;
+  height: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px #eee solid;
+  padding: 50rpx 0px;
+  margin: 0px auto;
+  position: relative;
+}
+.uni-select__input-box.data-v-ddf9e0a2 {
+  height: 25px;
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+}
+.uni-select.data-v-ddf9e0a2 {
+  font-size: 14px;
+  border: 1px solid #e5e5e5;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 0 5px;
+  padding-left: 10px;
+  position: relative;
+  display: flex;
+  -webkit-user-select: none;
+  user-select: none;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: solid 1px #e5e5e5;
+  width: 100%;
+  flex: 1;
+  height: 25px;
+}
+.register_form_name {
+  width: 30%;
+}
+.register_form_fun {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.register_form_fun input {
+  width: 100%;
+  text-align: left;
+  font-size: 12px;
+  top: 2px;
+  position: relative;
+}
+.register_form_register {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  margin-top: 80rpx;
+}
+.register_form_register button {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  background: #007AFF;
+  color: #fff;
+  border-radius: 0px;
+}
+.logo_text text {
+  color: #007AFF;
+}
+.backLogin {
+  width: 100%;
+  height: 10px;
+  line-height: 40px;
+  display: flex;
+  flex-direction: row;
+  margin-top: 50rpx;
+  align-items: center;
+  color: #444;
+  font-size: 14px;
+  justify-content: center;
+}
+.error_message {
+  color: red;
+  position: relative;
+  width: 400rpx;
+  left: 0;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.register_form_separator_account {
+  width: 100%;
+  height: 80rpx;
+  position: relative;
+  color: #999;
+  font-weight: bold;
+  border-bottom: 1px #eee solid;
+}
+.register_form_separator_person {
+  width: 100%;
+  height: 120rpx;
+  position: relative;
+  top: 10rpx;
+  color: #999;
+  font-weight: bold;
+  border-bottom: 1px #eee solid;
+}
+

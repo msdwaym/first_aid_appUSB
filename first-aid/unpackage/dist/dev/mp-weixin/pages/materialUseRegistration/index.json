@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "使用登记",
+  "navigationBarBackgroundColor": "rgba(0, 170, 255, 1.0)",
+  "navigationBarTextStyle": "#ffffff",
+  "titleSize": "40upx",
+  "usingComponents": {
+    "up-button": "../../node-modules/uview-plus/components/u-button/u-button",
+    "uni-forms": "../../uni_modules/uni-forms/components/uni-forms/uni-forms",
+    "uni-forms-item": "../../uni_modules/uni-forms/components/uni-forms-item/uni-forms-item"
+  }
+}

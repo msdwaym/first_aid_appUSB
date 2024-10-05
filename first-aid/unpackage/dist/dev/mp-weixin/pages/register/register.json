@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "用户注册",
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "first-aid-navigation": "../../components/first-aid-navigation/first-aid-navigation",
+    "uni-data-select": "../../uni_modules/uni-data-select/components/uni-data-select/uni-data-select"
+  }
+}

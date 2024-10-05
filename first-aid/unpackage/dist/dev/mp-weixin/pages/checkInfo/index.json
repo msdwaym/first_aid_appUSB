@@ -1,0 +1,18 @@
+{
+  "navigationBarTitleText": "盘点",
+  "navigationBarBackgroundColor": "rgba(0, 170, 255, 1.0)",
+  "navigationBarTextStyle": "#ffffff",
+  "titleSize": "40upx",
+  "usingComponents": {
+    "up-button": "../../node-modules/uview-plus/components/u-button/u-button",
+    "uni-data-select": "../../uni_modules/uni-data-select/components/uni-data-select/uni-data-select",
+    "up-modal": "../../node-modules/uview-plus/components/u-modal/u-modal",
+    "up-icon": "../../node-modules/uview-plus/components/u-icon/u-icon",
+    "u-button": "../../node-modules/uview-plus/components/u-button/u-button",
+    "u-form-item": "../../node-modules/uview-plus/components/u-form-item/u-form-item",
+    "u-form": "../../node-modules/uview-plus/components/u-form/u-form",
+    "up-overlay": "../../node-modules/uview-plus/components/u-overlay/u-overlay",
+    "up-radio": "../../node-modules/uview-plus/components/u-radio/u-radio",
+    "up-radio-group": "../../node-modules/uview-plus/components/u-radio-group/u-radio-group"
+  }
+}

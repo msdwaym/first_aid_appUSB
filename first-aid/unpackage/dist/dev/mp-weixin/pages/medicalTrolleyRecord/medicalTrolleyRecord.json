@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "急救车登记",
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "uni-data-select": "../../uni_modules/uni-data-select/components/uni-data-select/uni-data-select",
+    "up-button": "../../node-modules/uview-plus/components/u-button/u-button",
+    "first-aid-navigation": "../../components/first-aid-navigation/first-aid-navigation"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "info-card-box-vue": "../../components/InfoCardBox/InfoCardBox",
+    "uni-search-bar": "../../uni_modules/uni-search-bar/components/uni-search-bar/uni-search-bar",
+    "yi-step-tip": "../../uni_modules/yi-step-tip/components/yi-step-tip/yi-step-tip"
+  }
+}
