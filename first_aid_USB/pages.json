@@ -1,0 +1,255 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^u--(.*)": "uview-plus/components/u-$1/u-$1.vue",
+      "^up-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+      "^u-([^-].*)": "uview-plus/components/u-$1/u-$1.vue"
+    }
+  },
+  "pages": [
+	
+     {
+       "path": "pages/login/login",
+       "style": {
+         "enablePullDownRefresh": false,
+         "navigationStyle": "custom"
+       }
+     },
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "uni-app"
+      }
+    },
+    //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/homepage/homepage",
+      "style": {
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/MaterialModule/MaterialModule",
+      "style": {
+        "navigationBarTitleText": "急救车信息页面",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/MaterialUsedRecord/MaterialUsedRecord",
+      "style": {
+        "navigationBarTitleText": "物资使用登记",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/register/register",
+      "style": {
+        "navigationBarTitleText": "用户注册",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/userInfo/userInfo",
+      "style": {
+        "navigationBarTitleText": "个人信息",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/report/report",
+      "style": {
+        "navigationBarTitleText": "报表",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/feedback/feedback",
+      "style": {
+        "navigationBarTitleText": "反馈",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/userInfo/revisePart/revisePart",
+      "style": {
+        "navigationBarTitleText": "修改信息",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/medicalTrolleyRecord/medicalTrolleyRecord",
+      "style": {
+        "navigationBarTitleText": "急救车登记",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/medicalInfo/index",
+      "style": {
+        "navigationBarTitleText": "物资信息",
+        "navigationBarBackgroundColor": "rgba(0, 170, 255, 1.0)",
+        "navigationBarTextStyle": "#ffffff",
+        "titleSize": "40upx"
+      }
+    },
+    {
+      "path": "pages/checkInfo/index",
+      "style": {
+        "navigationBarTitleText": "盘点",
+        "navigationBarBackgroundColor": "rgba(0, 170, 255, 1.0)",
+        "navigationBarTextStyle": "#ffffff",
+        "titleSize": "40upx"
+      }
+    },
+    {
+      "path": "pages/materialUseRegistration/index",
+      "style": {
+        "navigationBarTitleText": "使用登记",
+        "navigationBarBackgroundColor": "rgba(0, 170, 255, 1.0)",
+        "navigationBarTextStyle": "#ffffff",
+        "titleSize": "40upx",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/materialUseRegistrationAuto/materialUseRegistrationAuto",
+      "style": {
+        "navigationBarTitleText": "使用登记",
+        "navigationBarBackgroundColor": "rgba(0, 170, 255, 1.0)",
+        "navigationBarTextStyle": "#ffffff",
+        "titleSize": "40upx",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/materialUseRegistrationPass/materialUseRegistrationPass",
+      "style": {
+        "navigationBarTitleText": "使用登记",
+        "navigationBarBackgroundColor": "rgba(0, 170, 255, 1.0)",
+        "navigationBarTextStyle": "#ffffff",
+        "titleSize": "40upx",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/materialInfoRegistration/index",
+      "style": {
+        "navigationBarTitleText": "物资登记",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/initLabelRegistration/initLabelRegistration",
+      "style": {
+        "navigationBarTitleText": "初始化标签",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/scanpage/scanpage",
+      "style": {
+        "navigationBarTitleText": "扫描页面",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/initLabelRecords/initLabelRecords",
+      "style": {
+        "navigationBarTitleText": "初始化记录",
+        "navigationBarBackgroundColor": "rgba(0, 170, 255, 1.0)",
+        "navigationBarTextStyle": "#ffffff",
+        "titleSize": "40upx"
+      }
+    },
+    {
+      "path": "pages/materialInfoRegistrationPass/materialInfoRegistrationPass",
+      "style": {
+        "navigationBarTitleText": "物资登记",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/materialInfoRegistrationAuto/materialInfoRegistrationAuto",
+      "style": {
+        "navigationBarTitleText": "物资登记",
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/invokedInitLabelRecords/invokedInitLabelRecords",
+      "style": {
+        "navigationBarTitleText": "补充记录",
+        "navigationBarBackgroundColor": "rgba(0, 170, 255, 1.0)",
+        "navigationBarTextStyle": "#ffffff",
+        "titleSize": "40upx"
+      }
+    },
+    {
+      "path": "pages/consumeRecords/consumeRecords",
+      "style": {
+        "navigationBarTitleText": "使用记录",
+        "navigationBarBackgroundColor": "rgba(0, 170, 255, 1.0)",
+        "navigationBarTextStyle": "#ffffff",
+        "titleSize": "40upx"
+      }
+    },
+    {
+    	"path" : "pages/reportDetails/reportDetails",
+    	"style" :
+    	{
+    		"navigationBarTitleText" : "盘点详情页面",
+			"enablePullDownRefresh": false,
+			"navigationStyle": "custom"
+    	}
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "uniIdRouter": {},
+  "tabBar": {
+    "color": "lightgrey",
+    "selectedColor": "#89CFFB",
+    "borderStyle": "black",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/homepage/homepage",
+        "iconPath": "static/Nav/ambulance.png",
+        "selectedIconPath": "static/Nav/ambulance-checked.png",
+        "text": "急救车"
+      },
+      {
+        "pagePath": "pages/report/report",
+        "iconPath": "static/Nav/report.png",
+        "selectedIconPath": "static/Nav/report-checked.png",
+        "text": "报表"
+      },
+      {
+        "pagePath": "pages/userInfo/userInfo",
+        "iconPath": "static/Nav/user.png",
+        "selectedIconPath": "static/Nav/user-checked.png",
+        "text": "我的"
+      }
+    ]
+  }
+}
