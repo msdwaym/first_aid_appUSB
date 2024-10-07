@@ -57,7 +57,7 @@ export default {
       account: '',
       password: '',
       macAddress: '',
-      isNeedMac: true,
+      isNeedMac: false,
     };
   },
   onLoad() {
@@ -87,6 +87,7 @@ export default {
         // return;
       }
       this.macAddress = mac.address();
+	  console.log(this.macAddress);
       if (mac.address() === "02:00:00:00:00:00" && this.macAddress === '') {
         uni.showToast({
           title: 'Error:未连接到指定局域网无法获取当前设备mac地址，请手动输入mac地址',
@@ -127,8 +128,11 @@ export default {
                 icon: 'none'
               });
             }
-          })
-          .catch(error => {
+			if (res.data.message && res.data.message.includes('当前终端信息不存在')) {
+				this.isNeedMac = true;
+				this.macAddress = null;
+			}
+          }).catch(error => {
             console.error('登录失败', error);
             uni.hideLoading();
             uni.showToast({
