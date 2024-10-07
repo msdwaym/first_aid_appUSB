@@ -1,1 +1,0 @@
-<view class="yi-step"><view wx:if="{{a}}" class="yi-step-mask"></view><view wx:if="{{b}}" class="yi-step-guide" style="{{f}}"><view class="yi-step-text"><text>{{c}}</text></view><view class="yi-step-button" bindtap="{{e}}">{{d}}</view></view></view>
