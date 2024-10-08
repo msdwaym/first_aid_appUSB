@@ -1,6 +1,6 @@
 import { getToken, setToken, getMacAddress} from "./token";
 
-let baseURL = 'http://192.168.30.159:11307/';
+let baseURL = 'http://8.137.126.114/api/';
 // let baseURL = 'http://121.37.171.243:11307/';
 
 export const request = (options) => {
