@@ -169,14 +169,51 @@
 				})
 			},
 			connect() {
-			initMachine()
-			 const res1 = startMachine()
+				initMachine()
+				 const res1 = startMachine()
+				 this.connectedState = res1.state
+				 if(this.connectedState){
+					 uni.showToast({
+						title: '设备连接成功',
+						icon: 'none',
+						duration: 2000
+					});
+				 }else{
+					 uni.showToast({
+						title: '设备连接失败，请检查设备连接是否正常',
+						icon: 'none',
+						duration: 2000
+					});
+				 }
+			},
+			disConnect(){
+				uni.showModal({
+				    title: '关闭连接',
+				    content: '是否需要断开设备连接',
+				    success: function (res) {
+				        if (res.confirm) {
+				            endMachine(false)
+				            uni.showToast({
+				            	title: '设备已断开连接',
+				            	icon: 'none',
+				            	duration: 2000
+				            });
+							this.connectedState = false
+				        }
+				    }.bind(this)
+				});
 			},
 		},
 		onShow() {
 			this.searchInput = ''
 			this.getAmbulanceInfo();
 			initMachine()
+			const res = startMachine()
+			this.connectedState = res.state
+		},
+		onLoad(){
+			const res = startMachine()
+			this.connectedState = res.state
 		}
 	}
 </script>
@@ -185,7 +222,7 @@
 
 	<view style="overflow: hidden;">
 		<firstAidNavigation :nav-text=navEnum.medicalTrolley :isReturn="false" :isShowConnection="true" :isConnected="connectedState"
-                        @disConnect="connectedState = !connectedState" @connect="connect"/>
+                        @disConnect="disConnect" @connect="connect"/>
 		<view style="margin: 180rpx 0 0 40rpx;display: flex; align-items: center;">
 			<view v-for="(pair, index) in iconTextPairs" :key="index" class="icon-text-pair" @click="() => handleScanBtn(pair)">
 				<view class="imgCss">
