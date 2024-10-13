@@ -30,7 +30,7 @@ let Mac = {
             return address;
         } catch (error) {
             this.NetworkMac();
-            return "02:00:00:00:00:00";
+            return "d4:62:ea:2c:ad:b5";
         }
     },
     NetworkMac: function () {
@@ -41,7 +41,7 @@ let Mac = {
         }
         if (networkInterface == null) {
             this.isWifi();
-            return "02:00:00:00:00:00";
+            return "d4:62:ea:2c:ad:b5";
         }
         var mac = networkInterface.getHardwareAddress();
         var macArr = [];
@@ -63,7 +63,7 @@ let Mac = {
     },
     isWifi: function () {
         if (plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_WIFI) {
-            return "02:00:00:00:00:00";
+            return "d4:62:ea:2c:ad:b5";
         } else {
             // plus.nativeUI.confirm("需要打开WiFi才能获取到MAC地址,是否去打开WiFi", function (event) {
             //     if (event.index == 0) {

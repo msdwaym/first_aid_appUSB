@@ -163,7 +163,7 @@ const userInfo = ref(null)
 
 const totalNum = ref(0)
 
-const showTips = ref(true)
+const showTips = ref(false)
 
 // 单件信息
 const showDetailInfo = ref(false)

@@ -6,7 +6,7 @@ export function userLogin(data, macAddress) {
         method: "POST",
         data: data,
         params: {
-            macAddress: '12121222'
+            macAddress: "c4:6e:33:83:6b:1f"
         }
     })
 }

@@ -77,6 +77,11 @@
 	function executeSequence() {
 	  readMachine();
 	  const res = getTagsMachine();
+	  uni.showToast({
+		title: res,
+		icon: 'none',
+		duration: 2000
+	  });
 	  if (res.code === "200" && !(res.data.length === 0)) {
 	    clearInterval(intervalID);
 	    clearTimeout(timeoutID);
@@ -85,7 +90,15 @@
 	}
 
 	const beginScan = () =>{
-		startMachine();
+		const res = startMachine();
+		if(res.code!=='200'){
+			uni.showToast({
+			  title: '设备连接异常，请检查设备是否连接',
+			  icon: 'none',
+			  duration: 2000
+			});
+			return
+		}
 		stopMachine()
 		uni.showLoading({
 			title: '正在扫描标签，请稍后',
@@ -294,11 +307,14 @@ onHide(()=>{
 	<view style="overflow: hidden;">
 		<firstAidNavigation :nav-text=titleText :isReturn="true" @return="handleReturn"  />
 		<view class="contentBox">
-			<view style="margin: 20rpx 0 0 50rpx; font-weight: bolder; font-size: 40rpx;">
-				<text>请扫描<text style="color:rgba(137, 207, 251, 1);font-weight: bolder;">{{remindText}}</text>标签</text>
+			<view style="margin: 80% 20rpx 30% 20rpx; font-weight: bolder; font-size: 60rpx;">
+				<text>请点击扫描按钮</text>
+				<view>
+					<text>扫描</text><text style="color:rgba(137, 207, 251, 1);font-weight: bolder;">{{remindText}}</text>标签
+				</view>
 			</view>
 			<view class="imgCss">
-				<image src="../../static/deviceInstruction.png" mode=""></image>
+				<!-- <image src="../../static/deviceInstruction.png" mode=""></image> -->
 
 				<!-- 加载状态 -->
 				<view class="loadingBox">
@@ -372,7 +388,8 @@ onHide(()=>{
 @import '@/common/styles/color/color.scss';
 
 	.contentBox {
-		margin: 180rpx 50rpx;
+		margin: auto 50rpx;
+		height: 100%;
 	}
 	.imgCss{
 		margin-top: 100rpx;

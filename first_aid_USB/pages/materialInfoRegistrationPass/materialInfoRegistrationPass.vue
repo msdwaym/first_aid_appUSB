@@ -2,20 +2,20 @@
   <firstAidNavigation :nav-text="'物资登记'" @return="backToHome" @toLabelRecords="getToRecords" :isReturn="true" :isShowLabelInfo="true" />
   <view style="overflow: hidden;">
     <view class="contentBox">
-      <view style="margin: 20rpx auto 0 50rpx; font-size: 40rpx;">
+      <view style="margin: 320rpx auto 0 50rpx; font-size: 40rpx;">
         <text style="color: #00b2ff">直接登记</text>
         <text style="font-size: 28upx">
           为初始化标签并进行物资登记操作
         </text>
       </view>
-      <view style="margin: 20rpx auto 0 50rpx; font-size: 40rpx;">
+      <view style="margin: 20rpx auto 200rpx 50rpx; font-size: 40rpx;">
         <text style="color: #00b2ff">补充登记</text>
         <text style="font-size: 28upx">
           为已初始化标签进行物资信息绑定
         </text>
       </view>
       <view class="imgCss">
-        <image src="../../static/deviceInstruction.png"></image>
+        <!-- <image src="../../static/deviceInstruction.png"></image> -->
       </view>
 
       <view class="returnBtnBox">

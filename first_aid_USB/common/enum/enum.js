@@ -18,9 +18,9 @@ const navEnum = {
 
 	register:"用户注册",
 
-	medicalTrolleyInfo:"急救车信息",
+	medicalTrolleyInfo:"抢救车信息",
 
-	medicalTrolley:"急救车",
+	medicalTrolley:"抢救车",
 
 	materiralInfo:"物资信息",
 
@@ -38,7 +38,7 @@ const navEnum = {
 
     labelRecords:"标签初始化记录",
 
-	medicalTrolleyRecord:"急救车登记",
+	medicalTrolleyRecord:"抢救车登记",
 
 	reportDetail:"盘点详情",
 

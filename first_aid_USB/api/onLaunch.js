@@ -1,8 +1,9 @@
 import {request} from "../util/request";
 
-export function getAppInfo() {
+export function getAppInfo(data) {
     return request({
-        url: "app/getAppInfo",
-        method: "GET",
+        url: "app/appVersion",
+        method: "POST",
+		data:data
     })
 }

@@ -1,20 +1,20 @@
 <template>
   <firstAidNavigation :nav-text="'物资耗用'" @return="backToHome" @toLabelRecords="getToRecords" :isReturn="true" :isShowLabelInfo="true" />
   <view class="contentBox">
-    <view style="margin: 20rpx auto 0 50rpx; font-size: 40rpx;">
+    <view style="margin: 320rpx auto 0 50rpx; font-size: 40rpx;">
     <text style="color: #00b2ff">连续扫描</text>
       <text style="font-size: 28upx">
         能够快速响应多批次物资扫描需求
       </text>
     </view>
-    <view style="margin: 20rpx auto 0 50rpx; font-size: 40rpx;">
+    <view style="margin: 20rpx auto 200rpx 50rpx; font-size: 40rpx;">
     <text style="color: #00b2ff">单件扫描</text>
       <text style="font-size: 28upx">
         提供更加完整精确的物资扫描流程
       </text>
     </view>
     <view class="imgCss">
-      <image src="../../static/deviceInstruction.png"></image>
+      <!-- <image src="../../static/deviceInstruction.png"></image> -->
     </view>
 
     <view class="returnBtnBox">

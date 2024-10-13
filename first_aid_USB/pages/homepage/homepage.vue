@@ -93,7 +93,9 @@
 					const processedItems = sortedItems.map(item => {  
 						const date = new Date(item.registrationTime);  
 						const formattedDate = date.toISOString().slice(0, 10);  
-						return { ...item, registrationTime: formattedDate };  
+						return { ...item,
+							registrationTime: formattedDate,
+							nurseName: item.nurseName == "null"?"管理员":item.nurseName};  
 					});
 					this.items = processedItems; // 将排序后的数据赋值给items
 					this.filteredItems = processedItems;
@@ -178,6 +180,7 @@
 						icon: 'none',
 						duration: 2000
 					});
+					
 				 }else{
 					 uni.showToast({
 						title: '设备连接失败，请检查设备连接是否正常',

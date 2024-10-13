@@ -1,5 +1,5 @@
 <template>
-  <firstAidNavigation :nav-text="'物资耗用22'" @return="backToHome" @toLabelRecords="getToRecords" :isReturn="true" :isShowLabelInfo="true" />
+  <firstAidNavigation :nav-text="'物资耗用'" @return="backToHome" @toLabelRecords="getToRecords" :isReturn="true" :isShowLabelInfo="true" />
   <view class="main">
     <view class="header margin-bottom16">
       <text>
@@ -139,7 +139,7 @@ const timer = ref(null)
 
 const totalNum = ref(0)
 
-const showTips = ref(true)
+const showTips = ref(false)
 
 const contentText = ref({contentdown: "等待扫描标签",contentrefresh: "正在扫描标签中...",contentnomore: "暂无标签数据"})
 
@@ -201,13 +201,19 @@ const endLoad = (words) => {
 
 const onScan = () => {
 	readMachine()
-  const res = getTagsMachine()
-  if (checkedArr.value.includes(restoreString(res.data))) {
+  let res = getTagsMachine()
+  let rs1 = res
+  if (checkedArr.value.includes(restoreString(res.data[0]))) {
     errorLoad('该物资已扫描')
   } else if (res.code === "200" && !(res.data==="CMD_NO_TAG_ERROR") && !(res.data.length === 0)) {
     // 接口调用获取数据待补充
     showLoading('正在扫描中...')
-    const data = res.data
+    let data = null;
+	if(res.data[0]){
+		data = res.data[0]
+	}else{
+		data = res.data
+	}
     getMedicalByCode({
       code: restoreString(data)
     }).then(res => {
@@ -225,15 +231,15 @@ const onScan = () => {
       } else if (res.data.code === 200 && res.data.data && !res.data.data.expirationDate) {
         errorLoad('该标签物资未补充')
         stopMachine()
-        endMachine()
+        endMachine(false)
       } else {
-        errorLoad('暂无标签数据')
+        errorLoad(restoreString(rs1.data[0]))
         stopMachine()
-        endMachine()
+        endMachine(false)
       }
       uni.hideLoading();
       stopMachine()
-      endMachine()
+      endMachine(false)
     })
   }
 }
@@ -244,7 +250,7 @@ const cancelShow = () => {
   startMachine()
   timer.value = setInterval(() => {
     onScan()
-  }, 1000)
+  }, 2500)
 }
 
 // 数据初始化

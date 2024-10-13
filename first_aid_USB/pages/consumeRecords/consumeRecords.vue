@@ -1,42 +1,58 @@
 <template>
   <view>
     <view class="tabs">
-      <view class="tableBoxCss">
-        <uni-table border emptyText="暂无更多数据" stripe style="font-size: 10rpx;">
+		<view class="tableBoxCss">
+				<!-- 物资使用记录信息盒子 -->
+				<view v-show="!noConsumeRecords" class="MaterialInfoBoxCss" v-for="record in consumeRecords" :key="record.id" @click="showInfo(record)">
+					<InfoCardBoxVue  viewText="物资名称" view1Text="编码" 
+						view2Text="消耗时间" :showView3=true view3Text="所属急救车" :viewDate =record.name
+						:showBtn="false"
+						:view1Date=record.code 
+						:view2Date=record.consumeTime :view3Date=record.medicalTrolleyCode>
+						
+					</InfoCardBoxVue>
+				</view>
+				
+				<view v-show="noConsumeRecords" class="noDataCss">
+					暂无数据
+				</view>
+		</view>
+      <!-- <view class="tableBoxCss"> -->
+        <!-- <uni-table border emptyText="暂无更多数据" stripe style="font-size: 10rpx;"> -->
           <!-- 表头行 -->
-          <uni-tr>
+          <!-- <uni-tr>
             <uni-th align="center" >物资名称</uni-th>
             <uni-th align="center" >物资编码</uni-th>
             <uni-th align="center" >创建人</uni-th>
             <uni-th align="center" >消耗时间</uni-th>
             <uni-th align="center" >所属科室</uni-th>
             <uni-th align="center" >所属急救车</uni-th>
-          </uni-tr>
+          </uni-tr> -->
           <!-- 表格数据行 -->
-          <uni-tr v-for="record in consumeRecords" :key="record.id" @click="showInfo(record)">
+          <!-- <uni-tr v-for="record in consumeRecords" :key="record.id" @click="showInfo(record)">
             <uni-td align="center">{{ record.name }}</uni-td>
             <uni-td align="center">{{ record.code }}</uni-td>
             <uni-td align="center">{{ record.nurseName }}</uni-td>
             <uni-td align="center">{{ record.consumeTime }}</uni-td>
             <uni-td align="center">{{ record.departmentName }}</uni-td>
             <uni-td align="center">{{ record.medicalTrolleyCode }}</uni-td>
-          </uni-tr>
+          </uni-tr> -->
 
-        </uni-table>
-      </view>
-      <view class="pageButtonCss">
-        <view class="returnPageCss">
-          <view @click="prePage">上一页</view>
-        </view>
+        <!-- </uni-table> -->
+      <!-- </view> -->
+      <!-- <view class="pageButtonCss"> -->
+        <!-- <view class="returnPageCss"> -->
+          <!-- <view @click="prePage">上一页</view> -->
+        <!-- </view> -->
 
-        <view class="nextPageCss">
-          <view @click="nextPage">下一页</view>
-        </view>
-      </view>
-      <view class="pageInfoCss">
-        <span>第<span class="fontColor">{{page.pageNum}}</span>页</span>
-        <span>共<span class="fontColor">{{page.total}}</span>条</span>
-      </view>
+        <!-- <view class="nextPageCss"> -->
+          <!-- <view @click="nextPage">下一页</view> -->
+        <!-- </view> -->
+      <!-- </view> -->
+      <!-- <view class="pageInfoCss"> -->
+        <!-- <span>第<span class="fontColor">{{page.pageNum}}</span>页</span> -->
+        <!-- <span>共<span class="fontColor">{{page.total}}</span>条</span> -->
+      <!-- </view> -->
 
     </view>
   </view>
@@ -103,6 +119,7 @@ import {getNurseInfo} from "../../api/userInfo";
 import {getConsumeRecordByPage, revertMaterial} from "../../api/records";
 import {onLoad} from '@dcloudio/uni-app'
 import { ref } from 'vue';
+import InfoCardBoxVue from "@/components/InfoCardBox/InfoCardBox.vue";
 
 const medicalTrolleyCode = ref(null);
 const id = ref(null)
@@ -111,6 +128,9 @@ const userInfo = ref(null)
 const consumeRecords = ref([])
 
 const showDetailInfo = ref(false)
+
+const noConsumeRecords = ref(true)
+
 const detailInfo = ref(null)
 
 const page = ref({
@@ -152,6 +172,7 @@ const initData = async () => {
     if (res2.data.code === 200) {
       page.value.total = res2.data.data.total
       consumeRecords.value = res2.data.data.result.filter(item => item.type === 0)
+	  noConsumeRecords.value = consumeRecords.value==null||consumeRecords.value.length == 0
     } else {
       errorLoad('加载数据失败')
     }
@@ -314,7 +335,7 @@ onLoad((options) => {
 
 .tableBoxCss{
   width: 700rpx;
-  font-size: 10rpx;
+  font-size: 28rpx;
   margin: 15rpx;
 }
 .tableBoxCss uni-table uni-th{
@@ -362,5 +383,21 @@ onLoad((options) => {
 .uni-table-td {
   height: 60upx;
   line-height: 60upx;
+}
+.tableBoxCss{
+  width: 700rpx;
+  // font-size: 10rpx;
+  margin: 15rpx;
+  padding-top: 50rpx;
+}
+.tableBoxCss uni-table uni-th{
+  width: 100rpx;
+}
+.MaterialInfoBoxCss{
+	margin: 40rpx;
+}
+.noDataCss {
+	margin: 200rpx 0 0 300rpx;
+	color: $main-blue;
 }
 </style>

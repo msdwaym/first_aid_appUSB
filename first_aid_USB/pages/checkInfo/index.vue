@@ -77,7 +77,7 @@
                   </view>
                 </view>
 
-                <view class="icons" @click="medicalDetailsShow(medical, tier)" v-if="medical.unitNum > 7">
+                <view class="icons" @click="medicalDetailsShow(medical, tier)" >
                   <uni-icons type="down" size="20" v-if="!medical.show" color="#000000" @click="" class="openIcon"></uni-icons>
                   <uni-icons type="up" size="20" v-else></uni-icons>
                 </view>
@@ -85,45 +85,44 @@
 
               <view class="info-content" v-if="!medical.show">
                 <!--       显示应有项数据       -->
-                <view class="item box-shadow5"
+                <!-- <view class="item box-shadow5"
                       @click="showItemInfo(medical, detail)"
                       :class="getCheckedState(detail)"
                     @longpress="changeState(detail, medical, tier)"
                     @touchend="itemTouched"
                       v-for="(detail, indexD) in medical.medicalDetails.slice(0, medical.medicalDetails.length > 5 ? 5 : medical.medicalDetails.length)"
-                >
+                > -->
                   <!--         缺失         -->
-                  <up-icon :style="{backgroundColor: '#8f939c'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '3')"></up-icon>
+                  <!-- <up-icon :style="{backgroundColor: '#8f939c'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '3')"></up-icon> -->
                   <!--         检查         -->
-                  <up-icon :style="{backgroundColor: '#4cd96485'}" name="checkmark" color="#ffffff"  v-if="(detail.checkedState.toString() === '1')"></up-icon>
+                  <!-- <up-icon :style="{backgroundColor: '#4cd96485'}" name="checkmark" color="#ffffff"  v-if="(detail.checkedState.toString() === '1')"></up-icon> -->
                   <!--         未录入         -->
-                  <up-icon :style="{backgroundColor: '#8f939c40'}" name="error" color="#ffffff"  v-if="(detail.checkedState.toString() === '0')"></up-icon>
+                  <!-- <up-icon :style="{backgroundColor: '#8f939c40'}" name="error" color="#ffffff"  v-if="(detail.checkedState.toString() === '0')"></up-icon> -->
                   <!--         过期         -->
-                  <up-icon :style="{backgroundColor: '#ff000090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '2')"></up-icon>
+                  <!-- <up-icon :style="{backgroundColor: '#ff000090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '2')"></up-icon> -->
                   <!--         过期处理         -->
-                  <up-icon :style="{backgroundColor: '#ff000090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '2')"></up-icon>
+                  <!-- <up-icon :style="{backgroundColor: '#ff000090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '2')"></up-icon> -->
                   <!--         即将过期         -->
-                  <up-icon :style="{backgroundColor: '#FFA50090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '4')"></up-icon>
+                  <!-- <up-icon :style="{backgroundColor: '#FFA50090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '4')"></up-icon> -->
                   <!--         即将过期处理         -->
-                  <up-icon :style="{backgroundColor: '#FFA50090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '4')"></up-icon>
-                </view>
+                  <!-- <up-icon :style="{backgroundColor: '#FFA50090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '4')"></up-icon> -->
+                <!-- </view> -->
 
-                <view
+                <!-- <view
                     class="item box-shadow5 unCheckedItem"
                     v-if="medical.unitNum"
-                    v-for="indexN in (medical.medicalDetails.length > 5 ? 0 : ((medical.unitNum - medical.medicalDetails.length) > 5 ?
-                    (5 - medical.medicalDetails.length) : (medical.unitNum - medical.medicalDetails.length)))"
+                    
                 >
                   {{'---'}}
-                </view>
+                </view> -->
 
                 <!--      显示还有更多数据可以展示        -->
-                <view
+                <!-- <view
                     class="item box-shadow5 addItem"
                     v-if="medical.unitNum > 7"
                 >
                   {{'···'}}
-                </view>
+                </view> -->
               </view>
 
               <view class="info-content" v-else>
@@ -389,7 +388,7 @@
 </template>
 
 <script setup>
-import { nextTick, onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref ,watch } from 'vue';
 import {
   getCheckInfoList,
   addInventoryRecord,
@@ -399,6 +398,7 @@ import {
 } from '../../api/checkInfo';
 import {
   endMachine,
+  getPower,
   getTagsMachine,
   initMachine,
   readMachine,
@@ -414,6 +414,7 @@ import UniFormsItem from "../../uni_modules/uni-forms/components/uni-forms-item/
 import UniForms from "../../uni_modules/uni-forms/components/uni-forms/uni-forms.vue";
 import {addConsumeListWithUpdate} from "../../api/materialUseRegistration";
 import UniIcons from "../../uni_modules/uni-icons/components/uni-icons/uni-icons.vue";
+import {voiceBroadcast,stopVoice} from '@/util/VoiceBroadcast.js'
 
 const medicalTrolleyCode = ref(null);
 const id = ref(null)
@@ -620,11 +621,38 @@ const getAllCheckedMedicals = (tier) => {
   }
 }
 
-const endScan = () => {
-	finishScan()
+const endScan = (isDi = true) => {
+	finishScan(isDi)
 }
-
+let power = 30;
 const beginScan = () => {
+	// startChangeDetection()
+	initMachine()
+	const res = startMachine()
+	if(res.code!=="200"){
+		uni.showToast({
+		  title: '设备连接失败，请检查设备连接',
+		  icon: 'none',
+		  duration: 2000
+		});
+		return
+	}
+	setPower(power)
+	const res1 = readMachine(true)
+	uni.showToast({
+	  title: res1,
+	  icon: 'none',
+	  duration: 2000
+	});
+	scanningState.value = true
+	// checkingTimer.value = setInterval(() => {
+	//   const scannerData = getTagsMachine().data
+	//   uni.showToast({
+	//     title: scannerData,
+	//     icon: 'none',
+	//     duration: 2000
+	//   });
+	// }, 250)
 	startScan()
 }
 
@@ -633,8 +661,7 @@ const startScan = () => {
 	checkingState.value = !checkingState.value
 	scanningState.value = true
 	setPower(1000)
-	initMachine()
-	startMachine()
+	startChangeDetection()
 	readMachine(true)
   tierInfoList.value = tierInfoList.value.map(item => {
     tierDetailsShow(item)
@@ -654,13 +681,14 @@ const startScan = () => {
   }, 250)
 }
 
-const finishScan = () => {
+const finishScan = (isDi) => {
 	isChecking.value = false
 	checkingState.value = !checkingState.value
+	updateTierBackground(); // 更新背景颜色  
   finishState.value = getFinishState()
   clearInterval(checkingTimer.value)
   stopMachine()
-  endMachine()
+  endMachine(isDi)
   selectionChange(keyword.value, selectIndex.value)
   scanningState.value = false
 }
@@ -910,7 +938,7 @@ const changeUnchecked = () => {
         showUnchecked.value = false
         tipsText.value = '请选择一张标签并进行扫描登记操作'
         tipsTitle.value = '标签登记'
-        showTips.value = true
+        // showTips.value = true
         plus.key.removeEventListener('keydown', keydownScan); // 移除监听器
         plus.key.removeEventListener('keyup', keyupScan);
         plus.key.addEventListener('keydown', labelRegister);
@@ -965,7 +993,7 @@ const initData = () => {
       })
       tierInfoList.value.sort((item1, item2) => item1.ordinal - item2.ordinal)
       finishState.value = getFinishState()
-      showTips.value = true
+      // showTips.value = true
       uni.hideLoading();
     }
 	})
@@ -1136,8 +1164,33 @@ onUnload((options) => {
   plus.key.removeEventListener('keydown', labelRegister);
   clearInterval(checkingTimer.value)
   stopMachine()
+  endScan(false)
   endMachine(false)
+  clearTimeout(changeTimeout);
 })
+
+let changeTimeout;
+const startChangeDetection = () => {
+	changeTimeout = setTimeout(() => {
+    if(totalNum.value>handelNum.value){
+		voiceBroadcast("剩余"+(totalNum.value-handelNum.value)+"个物资未盘点")
+	}
+  }, 3000);
+};  
+  
+watch([handelNum], (newValue) => {
+	clearTimeout(changeTimeout);
+	startChangeDetection();
+});
+watch([handelNum, totalNum], ([newHandelNum, newTotalNum]) => {
+	if (newTotalNum > 0 && newHandelNum == newTotalNum) {
+		try{
+			voiceBroadcast("物资已盘点完成")
+		}catch(e){
+		console.log(e);
+		}
+	}
+});
 </script>
 
 <style scoped lang="scss">

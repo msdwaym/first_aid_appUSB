@@ -2,9 +2,12 @@ import {getAppInfo} from '../api/onLaunch.js';
 
 function getVersion() {
     const systemInfo = uni.getSystemInfoSync();
-    getAppInfo().then(res => {
-		console.log(res);
-        if (res.data.code === 200) {
+    const data = {
+    		appType:0,
+    		appVersion:systemInfo.appWgtVersion
+    	}
+        getAppInfo(data).then(res => {
+            if (res.data.data !== null) {
             const appVersion = res.data.data.version;
             const appUrl = res.data.data.url;
             const forceUpdate = res.data.data.forceUpdate;

@@ -190,7 +190,7 @@ const typeList = ref([])
 const form = ref(null)
 const showTime = ref(false)
 
-const showTips = ref(true)
+const showTips = ref(false)
 
 const showDetailInfo = ref(null)
 const detailInfo = ref(null)

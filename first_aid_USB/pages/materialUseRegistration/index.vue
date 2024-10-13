@@ -13,7 +13,16 @@
 
     <view class="body">
       <view class="content margin-bottom16">
-        <uni-forms :modelValue="formData" label-position="top" ref="form">
+		  <view v-if="noData" class="noDataCss" style="font-size: 50rpx;">
+				请点击扫描标签按钮
+				<view>
+					开始扫描物资并登记使用
+				</view>
+		  </view>
+		  <view v-else>
+				<MaterialInfoCardBox   :views="viewsData"  />
+		  </view>
+        <!-- <uni-forms :modelValue="formData" label-position="top" ref="form">
           <uni-forms-item  label="物资" name="name">
             <input type="text" v-model="formData.name" disabled/>
           </uni-forms-item>
@@ -33,7 +42,7 @@
           <uni-forms-item label="有效期" name="date">
             <input type="text" v-model="formData.expirationDate" disabled/>
           </uni-forms-item>
-        </uni-forms>
+        </uni-forms> -->
       </view>
     </view>
 
@@ -41,7 +50,7 @@
 
       <view class="button-group">
         <up-button
-            text="重新扫描"
+            text="扫描标签"
             type="success"
             @click="start"
         ></up-button>
@@ -87,7 +96,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref ,computed} from 'vue';
 import UniForms from "../../uni_modules/uni-forms/components/uni-forms/uni-forms.vue";
 import UniFormsItem from "../../uni_modules/uni-forms/components/uni-forms-item/uni-forms-item.vue";
 import {
@@ -104,6 +113,7 @@ import {restoreString} from "../../util/encode";
 import {onLoad, onUnload,onShow,onHide} from '@dcloudio/uni-app'
 import FirstAidNavigation from "../../components/first-aid-navigation/first-aid-navigation.vue";
 import {voiceBroadcast,stopVoice} from '@/util/VoiceBroadcast.js'
+import MaterialInfoCardBox from "@/components/InfoCardBox/MaterialInfoCardBox.vue";
 
 const form = ref(null)
 
@@ -114,6 +124,14 @@ const formData = ref({
   num: '1',
   expirationDate: ''
 })
+
+const viewsData = computed(() => [
+  { text: "物资名称", date: formData.value.name, isInline: false },
+  { text: "编号", date: formData.value.code, isInline: false },
+  { text: "规格", date: formData.value.specification, isInline: true },
+  { text: "剩余数量", date: formData.value.count, isInline: true },
+  { text: "有效期", date: formData.value.expirationDate, isInline: false }
+]);
 
 const rules = ref({
   num: {
@@ -137,11 +155,15 @@ const totalNum = ref(0)
 // 定时器
 const checkingTimer = ref(0)
 
-const showTips = ref(true)
+const showTips = ref(false)
 
 const contentText = ref({contentdown: "等待扫描标签",contentrefresh: "正在扫描标签中...",contentnomore: "暂无标签数据"})
 
 const scanStateText = ref('')
+
+const noData = ref(true)
+
+const userInfo = ref(null)
 
 const backToHome = () => {
   uni.navigateBack({
@@ -156,35 +178,41 @@ const getToRecords = () => {
 }
 
 const onSave = () => {
+	uni.hideLoading();
   uni.showLoading({
     title: '保存中...',
     mask: true
   });
-  form.value.validate().then((value) => {
-    addConsume({
-      code: formData.value.code,
-      type: 0,
-      num: formData.value.num
-    }).then(res => {
-      if (res.data.code === 200) {
-        uni.hideLoading();
-        // 添加提示
-        uni.showToast({
-          title: '保存成功',
-          icon: 'success'
-        });
-        scanStateText.value = '耗用成功'
-        totalNum.value = totalNum.value + 1
-        formData.value.count = formData.value.count - 1
-      } else {
-        scanStateText.value = '耗用失败'
-        endLoad('剩余数量不足')
-      }
-    })
-  }).catch(error => {
-    scanStateText.value = '耗用失败'
-    endLoad('保存失败')
-  })
+  // form.value.validate().then((value) => {
+	  
+    try{
+		const res = addConsume({
+		  code: formData.value.code,
+		  type: 0,
+		  num: formData.value.num
+		}).then(res => {
+		  if (res.data.code === 200) {
+		    uni.hideLoading();
+		    // 添加提示
+		    uni.showToast({
+		      title: '保存成功',
+		      icon: 'success'
+		    });
+		    scanStateText.value = '耗用成功'
+		    totalNum.value = totalNum.value + 1
+		    formData.value.count = formData.value.count - 1
+			noData.value = false
+		  } else {
+		    scanStateText.value = '耗用失败'
+			noData.value = true
+		    endLoad('剩余数量不足')
+		  }
+		})
+	}catch(e){
+		uni.hideLoading();
+		scanStateText.value = '耗用失败'
+		endLoad('保存失败')
+	}
 }
 
 const endLoad = (words) => {
@@ -269,8 +297,33 @@ const onScan = (data) => {
   }
 }
 
+const rollback = async (detail) => {
+  const res = await revertMaterial({
+    nurseId: userInfo.value.id,
+    consumeRecordId: detail.id,
+    medicalConfigId: detail.medicalConfigId
+  })
+  uni.showToast({
+    title: res,
+    icon: 'error'
+  });
+
+  if (res.data.code === 200) {
+    showLoading('操作成功')
+    showDetailInfo.value = false
+    initData()
+	noData.value = true
+  } else {
+    errorLoad(res.data.message)
+  }
+}
+
 // 数据初始化
-const initData = () => {
+const initData = async () => {
+	const res = await getNurseInfo()
+	if(res.data.code === 200){
+		userInfo.value = res.data.data
+	}
 }
 
 const showLoading = (words) => {
@@ -318,6 +371,7 @@ onHide(()=>{
 </script>
 
 <style scoped lang="scss">
+@import '@/common/styles/color/color.scss';
 .warp {
   width: 600upx;
   height: fit-content;
@@ -602,5 +656,9 @@ input {
 :deep(.uni-select__input-placeholder) {
   font-size: 28upx;
   padding-left: 0;
+}
+.noDataCss {
+	margin: 200rpx 50rpx ;
+	color: $main-blue;
 }
 </style>

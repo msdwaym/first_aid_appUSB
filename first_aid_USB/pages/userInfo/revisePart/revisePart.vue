@@ -4,7 +4,7 @@ import { defineProps, ref,onMounted,watchEffect  } from 'vue';
 import firstAidNavigation from "@/components/first-aid-navigation/first-aid-navigation.vue";
 import {navEnum} from "@/common/enum/enum.js";
 import {Return} from "@/util/router.js";
-import {reviseName,revisePassword} from "@/api/userInfo.js"
+import {reviseName,revisePassword,reviseAddress} from "@/api/userInfo.js"
 import {onLoad} from '@dcloudio/uni-app'
 
 const localTitle = ref('');  
@@ -25,7 +25,8 @@ const formData = {
   oldPassword: "",
   newPassword: "",
   newPasswordConfirm:"",
-  department: ""
+  department: "",
+  reviseAddress:''
 }
 
 const  Submit=async()=>{
@@ -140,7 +141,7 @@ const  Submit=async()=>{
 			}
 		 }else if(localTitle.value==="收货地址"){
 			 // 接口修改
-			const res = await reviseName(formData)
+			const res = await reviseAddress(formData)
 
 			if(res.data.code===200){
 				uni.showToast({

@@ -45,3 +45,12 @@ export function getAccountInfo(){
 		method:'GET'
 	})
 }
+
+// 修改收货地址
+export function reviseAddress(deliveryAddress){
+	return request({
+		url:'/nurse/modifyDeliveryAddress',
+		method:'POST',
+		data:deliveryAddress
+	})
+}
