@@ -38,9 +38,10 @@ export function stopMachine() {
 export function endMachine(voice = true) {
 	try{
 		if (voice) {
-			const src = '/static/voice/beep.wav'
-			const sound = createAudioPlayer(src)
-			sound.play()
+			// const src = '/static/voice/beep.wav'
+			// const sound = createAudioPlayer(src)
+			// sound.play()
+			di()
 		}
 	} catch(err) {
 		console.log(err);
@@ -125,4 +126,17 @@ export function getPower() {
  */
 export function beep(context) {
 	return MachineModule.beep(context);
+}
+
+// 
+export function di(){
+	try{
+		const src = '/static/voice/beep.wav'
+		const sound = createAudioPlayer(src)
+		sound.play()
+		return true;
+	}catch(e){
+		console.log(e);
+		return false;
+	}
 }

@@ -410,7 +410,8 @@ import {
   setPower,
   startMachine,
   stopMachine,
-  writeMachine
+  writeMachine,
+  di
 } from "../../util/machine";
 import {onLoad, onUnload,onShow,onHide} from '@dcloudio/uni-app'
 import {getNurseInfo} from "../../api/userInfo";
@@ -1113,6 +1114,16 @@ const showLoading = (words) => {
   });
 }
 
+const updateTierBackground = () => {
+  tierInfoList.value.forEach(tier => {  
+    if (tier.total !== 0 && tier.handledNum !== tier.total) {  
+      tier.backgroundColor = 'red'; // 或者您可以选择使用 CSS 类  
+    } else {  
+      tier.backgroundColor = ''; // 如果没有不相等，则清除背景颜色  
+    }  
+  });  
+};
+
 const isIn = ref(true)
 function keydownScan(event){
 	if((event.keyCode === 134 || event.keyCode === 4) && !showTips.value){
@@ -1193,6 +1204,8 @@ const startChangeDetection = () => {
   
 watch([handelNum], (newValue) => {
 	clearTimeout(changeTimeout);
+	// 播放di声
+	di()
 	startChangeDetection();
 });
 watch([handelNum, totalNum], ([newHandelNum, newTotalNum]) => {
