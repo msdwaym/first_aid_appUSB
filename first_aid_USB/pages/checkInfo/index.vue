@@ -31,6 +31,10 @@
           </view>
         </view>
 			</view>
+			<!-- 已完成显示 -->
+			<view>
+			  <switch @change="isCompleteStatus" color="rgba(137, 207, 251, 1)" style="transform:scale(0.7)" />显示已完成
+			</view>
 
 			<view class="content margin-bottom16" :style="{height: showSearch ? '905upx' : '1005upx'}">
 				<scroll-view
@@ -57,6 +61,7 @@
 
             <view class="tier-content box-shadow5"
                   v-for="(medical, index) in tier.medicalConfigs"
+				  v-show="!((medical.handledNum === medical.medicalDetails.length || medical.medicalDetails.length === 0)&&!isCompleteShow)"
             >
               <image src="../../static/ItemState/checkedItem.png" shape="circle" v-if="getAllCheckedDetails(medical)"/>
               <!--       展示数据名称       -->
@@ -537,6 +542,9 @@ const searchArr = ref([
     text: '已过期'
   }
 ])
+
+// 物资盘点完成，设置显示隐藏
+let isCompleteShow = ref(false)
 
 const radioChange = (value) => {
   uncheckedType.value = value
@@ -1169,6 +1177,11 @@ onUnload((options) => {
   clearTimeout(changeTimeout);
 })
 
+const isCompleteStatus = (e)=>{
+	console.log(e);
+	isCompleteShow.value = e.detail.value
+}
+
 let changeTimeout;
 const startChangeDetection = () => {
 	changeTimeout = setTimeout(() => {
@@ -1415,7 +1428,7 @@ watch([handelNum, totalNum], ([newHandelNum, newTotalNum]) => {
 
 		.content {
       box-shadow: 0upx 0upx 5upx #00000075;
-      height: 1200upx !important;
+      height: 1050upx !important;
 
       .scroll-view-main {
         height: 100%;
