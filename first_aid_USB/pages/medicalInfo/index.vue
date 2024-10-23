@@ -180,17 +180,17 @@
 
 		<view class="footer">
 			<view class="button-group">
-				<up-button
+				<up-button color="rgba(137, 207, 251, 1)"
 				text="使用记录"
 				type="primary"
 				@click="navToRecord(0)"
 				></up-button>
-				<up-button
+				<up-button color="rgba(137, 207, 251, 1)"
 				text="过期注销记录"
 				type="primary"
 				@click="navToRecord(1)"
 				></up-button>
-				<up-button
+				<up-button color="rgba(137, 207, 251, 1)"
 				text="异常缺失记录"
 				type="primary"
 				@click="navToRecord(2)"

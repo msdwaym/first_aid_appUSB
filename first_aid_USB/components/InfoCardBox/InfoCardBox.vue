@@ -1,4 +1,5 @@
 <script setup>
+	import {ref} from 'vue';
 	const props=defineProps ({
 		/* 输入文字 */
 		btnText:{
@@ -59,9 +60,17 @@
 			default:''
 		},
 	})
+	const isAnimating = ref(false);  
+	  
+	const handleClick = () => {  
+	  isAnimating.value = true;  
+	  setTimeout(() => {  
+	    isAnimating.value = false;  
+	  }, 200); // 与 CSS 动画持续时间一致  
+	};  
 </script>
 <template>
-	<view class="medicalTrolleyInfoBoxCss">
+	<view class="medicalTrolleyInfoBoxCss" @click="handleClick" :class="{'clickable': true, 'animate-click': isAnimating}">
 		<view >
 			<view class="ellipsis-text" style="display: inline-block;" id="view">
 				{{props.viewText}}:
@@ -156,5 +165,24 @@
         text-overflow: ellipsis;  
         padding-right: 10rpx;
 		display: inline-block;
+}
+@keyframes click-animation {  
+  0% {  
+    transform: scale(1);  
+  }  
+  50% {  
+    transform: scale(0.95);  
+  }  
+  100% {  
+    transform: scale(1);  
+  }  
+}  
+  
+.clickable {  
+  cursor: pointer;  
+}  
+  
+.animate-click {  
+  animation: click-animation 0.2s ease;  
 }
 </style>

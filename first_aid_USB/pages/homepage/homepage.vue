@@ -30,7 +30,8 @@
 			// SixUniTts.initSixUniTts()
 			tagUtil.init()
 			return {
-        connectedState: false,
+				isAnimating: null,
+				connectedState: false,
 				text:'氧气枕,氧气枕',
 				isActive: null, // 可以是 'prev', 'next', 或 null
 				items: [],
@@ -165,10 +166,15 @@
 			handleError(event) {
 			    console.error('图片加载失败:', event.target.src);
 			},
-			handleScanBtn(value){
-				uni.navigateTo({
-					url:`/pages/scanpage/scanpage?title=${value.text}&index=${value.index}`
-				})
+			handleScanBtn(pair) {
+			    this.isAnimating = this.iconTextPairs.indexOf(pair);
+			    setTimeout(() => {  
+			      this.isAnimating = null;
+			    }, 200);
+			    // 导航到扫描页面
+			    uni.navigateTo({
+			      url: `/pages/scanpage/scanpage?title=${pair.text}&index=${pair.index}`
+			    });
 			},
 			connect() {
 				initMachine()
@@ -227,7 +233,9 @@
 		<firstAidNavigation :nav-text=navEnum.medicalTrolley :isReturn="false" :isShowConnection="true" :isConnected="connectedState"
                         @disConnect="disConnect" @connect="connect"/>
 		<view style="margin: 180rpx 0 0 40rpx;display: flex; align-items: center;">
-			<view v-for="(pair, index) in iconTextPairs" :key="index" class="icon-text-pair" @click="() => handleScanBtn(pair)">
+			<view v-for="(pair, index) in iconTextPairs" :key="index" class="icon-text-pair"   
+				@click="handleScanBtn(pair)"   
+				:class="{'animate-click': isAnimating === index}">
 				<view class="imgCss">
 					<image :src="pair.icon" @error="handleError" style="width: 60rpx; height: 60rpx;" @click="() => handleScanBtn(pair)" mode=""></image>
 				</view>
@@ -239,7 +247,6 @@
 			<uni-search-bar @confirm="handleSearchConfirm" @input="handleInput" radius="100" placeholder="请输入急救车编号"
 				class="SearchBoxCss" :class="{'highlight': showHighlight}"   v-model="searchInput" cancelButton='none'>
 			</uni-search-bar>
-
 
 			<!-- 急救车信息盒子 -->
 			<view style="margin: 50rpx 0;" v-for="(item, index) in filteredItems" :key="index"
@@ -302,5 +309,20 @@
 		font-size: 22rpx;
 		align-items: center;
 		justify-content: center;
+	}
+	@keyframes click-animation {  
+	  0% {  
+	    transform: scale(1);  
+	  }  
+	  50% {  
+	    transform: scale(0.95);  
+	  }  
+	  100% {  
+	    transform: scale(1);  
+	  }  
+	}  
+	  
+	.animate-click {  
+	  animation: click-animation 0.2s ease;  
 	}
 </style>

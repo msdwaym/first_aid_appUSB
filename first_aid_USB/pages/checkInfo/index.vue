@@ -1,395 +1,397 @@
 <template>
-	<view class="main">
-		<view class="header margin-bottom16">
-			<view>
-				急救车: {{medicalTrolleyCode}}
-			</view>
-
-      <text style="line-height: 80upx; margin-left: 10upx">
-        {{handelNum + '/' + totalNum}}
-      </text>
-
-      <up-button :text="showSearch ? '收起查询' : '展开查询'" @click="showSearch = !showSearch"></up-button>
-		</view>
-
-		<view class="body">
-			<view class="operation-group margin-bottom16" v-if="showSearch">
-        <view :style="{display: 'flex',justifyContent: 'space-between',verticalAlign: 'center'}">
-          <uni-data-select v-model="keyword" :localdata="searchArr" placeholder="请选择类型"
-                           class="picker" type="text" @change="selectionChange"></uni-data-select>
-          <text style="line-height: 80upx; margin-left: 10upx">
-            {{(selectIndex + (filetArr.length ? 1 : 0)) + '/' + filetArr.length}}
-          </text>
-
-          <view class="button-group">
-            <view class="icons" style="margin-right: 10upx" @click="getPre">
-              <uni-icons type="up" size="20" color="#000000" class="openIcon"></uni-icons>
-            </view>
-            <view class="icons">
-              <uni-icons type="down" size="20" @click="getNext"></uni-icons>
-            </view>
-          </view>
-        </view>
-			</view>
-			<!-- 已完成显示 -->
-			<view>
-			  <switch @change="isCompleteStatus" color="rgba(137, 207, 251, 1)" style="transform:scale(0.7)" />显示已完成
-			</view>
-
-			<view class="content margin-bottom16" :style="{height: showSearch ? '905upx' : '1005upx'}">
-				<scroll-view
-				scroll-y="true"
-				class="scroll-view-main"
-				:scroll-into-view="intoIndex"
-				>
-					<view class="tier-list margin-bottom16 box-shadow5" v-for="tier in tierInfoList">
-            <view class="header">
-              <view class="item-info">
-                <view class="item-name">
-                  {{tier.tierName}}
-                  <image style="width: 35upx; height: 35upx; clip-path: circle(50% at 50% 50%); margin-bottom: -5upx" src="../../static/ItemState/checkedItem.png" shape="circle"
-                         v-if="getAllCheckedMedicals(tier)"/>
-                </view>
-
-                <view class="scanned-total">
-                  {{tier.total ? (tier.handledNum + '/' + tier.total) : '0/0'}}
-                </view>
-              </view>
-
-              <up-button :text="tier.show ? '收起' : '展开'" @click="tierDetailsShow(tier)"></up-button>
-            </view>
-
-            <view class="tier-content box-shadow5"
-                  v-for="(medical, index) in tier.medicalConfigs"
-				  v-show="!((medical.handledNum === medical.medicalDetails.length || medical.medicalDetails.length === 0)&&!isCompleteShow)"
-            >
-              <image src="../../static/ItemState/checkedItem.png" shape="circle" v-if="getAllCheckedDetails(medical)"/>
-              <!--       展示数据名称       -->
-              <view class="content-header">
-                <view
-                    :id=" 'item' + medical.medicalConfigId.substr(-6, 6)"
-                    class="item-info box-shadow5 itemName"
-                    ref="testList"
-                    @click="showMedical(medical)"
-                    :class="{checkedItem: medical.handledNum === medical.medicalDetails.length || medical.medicalDetails.length === 0}"
-                >
-                  <view class="item-name">
-                    {{medical.medicalName}}
-                  </view>
-
-                  <view class="scanned-total">
-                    {{medical.medicalDetails.length ? (medical.handledNum + '/' + medical.medicalDetails.length) : '0'}}
-                  </view>
-                </view>
-
-                <view class="icons" @click="medicalDetailsShow(medical, tier)" >
-                  <uni-icons type="down" size="20" v-if="!medical.show" color="#000000" @click="" class="openIcon"></uni-icons>
-                  <uni-icons type="up" size="20" v-else></uni-icons>
-                </view>
-              </view>
-
-              <view class="info-content" v-if="!medical.show">
-                <!--       显示应有项数据       -->
-                <!-- <view class="item box-shadow5"
-                      @click="showItemInfo(medical, detail)"
-                      :class="getCheckedState(detail)"
-                    @longpress="changeState(detail, medical, tier)"
-                    @touchend="itemTouched"
-                      v-for="(detail, indexD) in medical.medicalDetails.slice(0, medical.medicalDetails.length > 5 ? 5 : medical.medicalDetails.length)"
-                > -->
-                  <!--         缺失         -->
-                  <!-- <up-icon :style="{backgroundColor: '#8f939c'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '3')"></up-icon> -->
-                  <!--         检查         -->
-                  <!-- <up-icon :style="{backgroundColor: '#4cd96485'}" name="checkmark" color="#ffffff"  v-if="(detail.checkedState.toString() === '1')"></up-icon> -->
-                  <!--         未录入         -->
-                  <!-- <up-icon :style="{backgroundColor: '#8f939c40'}" name="error" color="#ffffff"  v-if="(detail.checkedState.toString() === '0')"></up-icon> -->
-                  <!--         过期         -->
-                  <!-- <up-icon :style="{backgroundColor: '#ff000090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '2')"></up-icon> -->
-                  <!--         过期处理         -->
-                  <!-- <up-icon :style="{backgroundColor: '#ff000090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '2')"></up-icon> -->
-                  <!--         即将过期         -->
-                  <!-- <up-icon :style="{backgroundColor: '#FFA50090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '4')"></up-icon> -->
-                  <!--         即将过期处理         -->
-                  <!-- <up-icon :style="{backgroundColor: '#FFA50090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '4')"></up-icon> -->
-                <!-- </view> -->
-
-                <!-- <view
-                    class="item box-shadow5 unCheckedItem"
-                    v-if="medical.unitNum"
-                    
-                >
-                  {{'---'}}
-                </view> -->
-
-                <!--      显示还有更多数据可以展示        -->
-                <!-- <view
-                    class="item box-shadow5 addItem"
-                    v-if="medical.unitNum > 7"
-                >
-                  {{'···'}}
-                </view> -->
-              </view>
-
-              <view class="info-content" v-else>
-                <view
-                    class="item box-shadow5"
-                    @click="showItemInfo(medical, detail)"
-                    v-for="(detail, indexD) in medical.medicalDetails"
-                    @longpress="changeState(detail, medical, tier)"
-                    @touchend="itemTouched"
-                    :class="getCheckedState(detail)"
-                    :id="getDetailID(detail)"
-                >
-                  <!--         缺失         -->
-                  <up-icon :style="{backgroundColor: '#8f939c'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '3')"></up-icon>
-                  <!--         检查         -->
-                  <up-icon :style="{backgroundColor: '#4cd96485'}" name="checkmark" color="#ffffff"  v-if="(detail.checkedState.toString() === '1')"></up-icon>
-                  <!--         未录入         -->
-                  <up-icon :style="{backgroundColor: '#8f939c40'}" name="error" color="#ffffff"  v-if="(detail.checkedState.toString() === '0')"></up-icon>
-                  <!--         过期         -->
-                  <up-icon :style="{backgroundColor: '#ff000090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '2')"></up-icon>
-                  <!--         过期处理         -->
-                  <up-icon :style="{backgroundColor: '#ff000090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '2')"></up-icon>
-                  <!--         即将过期         -->
-                  <up-icon :style="{backgroundColor: '#FFA50090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '4')"></up-icon>
-                  <!--         即将过期处理         -->
-                  <up-icon :style="{backgroundColor: '#FFA50090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '4')"></up-icon>
-                </view>
-
-                <view
-                    class="item box-shadow5 unCheckedItem"
-                    v-if="medical.unitNum"
-                    v-for="indexN in (medical.unitNum - (medical.medicalDetails ? medical.medicalDetails.length : 0))"
-                >
-                  {{'---'}}
-                </view>
-              </view>
-            </view>
+	<view style="overflow: hidden;">
+		<view class="main">
+				<view class="header margin-bottom16">
+					<view>
+						急救车: {{medicalTrolleyCode}}
 					</view>
-				</scroll-view>
+		
+		    <text style="line-height: 80upx; margin-left: 10upx">
+		      {{handelNum + '/' + totalNum}}
+		    </text>
+		
+		    <up-button :text="showSearch ? '收起查询' : '展开查询'" @click="expandSearch()"></up-button>
+				</view>
+		
+				<view class="body">
+					<view class="operation-group margin-bottom16" v-if="showSearch">
+		      <view :style="{display: 'flex',justifyContent: 'space-between',verticalAlign: 'center'}">
+		        <uni-data-select v-model="keyword" :localdata="searchArr" placeholder="请选择类型"
+		                         class="picker" type="text" @change="selectionChange"></uni-data-select>
+		        <text style="line-height: 80upx; margin-left: 10upx">
+		          {{(selectIndex + (filetArr.length ? 1 : 0)) + '/' + filetArr.length}}
+		        </text>
+		
+		        <view class="button-group">
+		          <view class="icons" style="margin-right: 10upx" @click="getPre">
+		            <uni-icons type="up" size="20" color="#000000" class="openIcon"></uni-icons>
+		          </view>
+		          <view class="icons">
+		            <uni-icons type="down" size="20" @click="getNext"></uni-icons>
+		          </view>
+		        </view>
+		      </view>
+					</view>
+					<!-- 已完成显示 -->
+					<view>
+					  <switch @change="isCompleteStatus" color="rgba(137, 207, 251, 1)" style="transform:scale(0.7)" />显示已完成
+					</view>
+		
+					<view class="content margin-bottom16" :style="{height: showSearch ? '905upx' : '1005upx'}">
+						<scroll-view
+						scroll-y="true"
+						class="scroll-view-main"
+						:scroll-into-view="intoIndex"
+						>
+							<view class="tier-list margin-bottom16 box-shadow5" v-for="tier in tierInfoList">
+		          <view class="header">
+		            <view class="item-info">
+		              <view class="item-name">
+		                {{tier.tierName}}
+		                <image style="width: 35upx; height: 35upx; clip-path: circle(50% at 50% 50%); margin-bottom: -5upx" src="../../static/ItemState/checkedItem.png" shape="circle"
+		                       v-if="getAllCheckedMedicals(tier)"/>
+		              </view>
+		
+		              <view class="scanned-total">
+		                {{tier.total ? (tier.handledNum + '/' + tier.total) : '0/0'}}
+		              </view>
+		            </view>
+		
+		            <up-button :text="tier.show ? '收起' : '展开'" @click="tierDetailsShow(tier)"></up-button>
+		          </view>
+		
+		          <view class="tier-content box-shadow5"
+		                v-for="(medical, index) in tier.medicalConfigs"
+						  v-show="!((medical.handledNum === medical.medicalDetails.length || medical.medicalDetails.length === 0)&&!isCompleteShow)"
+		          >
+		            <image src="../../static/ItemState/checkedItem.png" shape="circle" v-if="getAllCheckedDetails(medical)"/>
+		            <!--       展示数据名称       -->
+		            <view class="content-header">
+		              <view
+		                  :id=" 'item' + medical.medicalConfigId.substr(-6, 6)"
+		                  class="item-info box-shadow5 itemName"
+		                  ref="testList"
+		                  @click="showMedical(medical)"
+		                  :class="{checkedItem: medical.handledNum === medical.medicalDetails.length || medical.medicalDetails.length === 0}"
+		              >
+		                <view class="item-name">
+		                  {{medical.medicalName}}
+		                </view>
+		
+		                <view class="scanned-total">
+		                  {{medical.medicalDetails.length ? (medical.handledNum + '/' + medical.medicalDetails.length) : '0'}}
+		                </view>
+		              </view>
+		
+		              <view class="icons" @click="medicalDetailsShow(medical, tier)" >
+		                <uni-icons type="down" size="20" v-if="!medical.show" color="#000000" @click="" class="openIcon"></uni-icons>
+		                <uni-icons type="up" size="20" v-else></uni-icons>
+		              </view>
+		            </view>
+		
+		            <view class="info-content" v-if="!medical.show">
+		              <!--       显示应有项数据       -->
+		              <!-- <view class="item box-shadow5"
+		                    @click="showItemInfo(medical, detail)"
+		                    :class="getCheckedState(detail)"
+		                  @longpress="changeState(detail, medical, tier)"
+		                  @touchend="itemTouched"
+		                    v-for="(detail, indexD) in medical.medicalDetails.slice(0, medical.medicalDetails.length > 5 ? 5 : medical.medicalDetails.length)"
+		              > -->
+		                <!--         缺失         -->
+		                <!-- <up-icon :style="{backgroundColor: '#8f939c'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '3')"></up-icon> -->
+		                <!--         检查         -->
+		                <!-- <up-icon :style="{backgroundColor: '#4cd96485'}" name="checkmark" color="#ffffff"  v-if="(detail.checkedState.toString() === '1')"></up-icon> -->
+		                <!--         未录入         -->
+		                <!-- <up-icon :style="{backgroundColor: '#8f939c40'}" name="error" color="#ffffff"  v-if="(detail.checkedState.toString() === '0')"></up-icon> -->
+		                <!--         过期         -->
+		                <!-- <up-icon :style="{backgroundColor: '#ff000090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '2')"></up-icon> -->
+		                <!--         过期处理         -->
+		                <!-- <up-icon :style="{backgroundColor: '#ff000090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '2')"></up-icon> -->
+		                <!--         即将过期         -->
+		                <!-- <up-icon :style="{backgroundColor: '#FFA50090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '4')"></up-icon> -->
+		                <!--         即将过期处理         -->
+		                <!-- <up-icon :style="{backgroundColor: '#FFA50090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '4')"></up-icon> -->
+		              <!-- </view> -->
+		
+		              <!-- <view
+		                  class="item box-shadow5 unCheckedItem"
+		                  v-if="medical.unitNum"
+		                  
+		              >
+		                {{'---'}}
+		              </view> -->
+		
+		              <!--      显示还有更多数据可以展示        -->
+		              <!-- <view
+		                  class="item box-shadow5 addItem"
+		                  v-if="medical.unitNum > 7"
+		              >
+		                {{'···'}}
+		              </view> -->
+		            </view>
+		
+		            <view class="info-content" v-else>
+		              <view
+		                  class="item box-shadow5"
+		                  @click="showItemInfo(medical, detail)"
+		                  v-for="(detail, indexD) in medical.medicalDetails"
+		                  @longpress="changeState(detail, medical, tier)"
+		                  @touchend="itemTouched"
+		                  :class="getCheckedState(detail)"
+		                  :id="getDetailID(detail)"
+		              >
+		                <!--         缺失         -->
+		                <up-icon :style="{backgroundColor: '#8f939c'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '3')"></up-icon>
+		                <!--         检查         -->
+		                <up-icon :style="{backgroundColor: '#4cd96485'}" name="checkmark" color="#ffffff"  v-if="(detail.checkedState.toString() === '1')"></up-icon>
+		                <!--         未录入         -->
+		                <up-icon :style="{backgroundColor: '#8f939c40'}" name="error" color="#ffffff"  v-if="(detail.checkedState.toString() === '0')"></up-icon>
+		                <!--         过期         -->
+		                <up-icon :style="{backgroundColor: '#ff000090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '2')"></up-icon>
+		                <!--         过期处理         -->
+		                <up-icon :style="{backgroundColor: '#ff000090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '2')"></up-icon>
+		                <!--         即将过期         -->
+		                <up-icon :style="{backgroundColor: '#FFA50090'}" name="clock" color="#ffffff"  v-if="((!detail.handled) && detail.checkedState.toString() === '4')"></up-icon>
+		                <!--         即将过期处理         -->
+		                <up-icon :style="{backgroundColor: '#FFA50090'}" name="close" color="#ffffff"  v-if="(detail.handled && detail.checkedState.toString() === '4')"></up-icon>
+		              </view>
+		
+		              <view
+		                  class="item box-shadow5 unCheckedItem"
+		                  v-if="medical.unitNum"
+		                  v-for="indexN in (medical.unitNum - (medical.medicalDetails ? medical.medicalDetails.length : 0))"
+		              >
+		                {{'---'}}
+		              </view>
+		            </view>
+		          </view>
+							</view>
+						</scroll-view>
+					</view>
+				</view>
+		
+				<view class="footer">
+		
+					<view class="button-group">
+		      <up-button
+		          :text="scanningState ? '结束扫描': '开始扫描'"
+		          :type="scanningState ? 'error' : 'success'"
+		          @click="() => {
+							if (scanningState) {
+		          endScan()
+							} else { 
+		          beginScan()
+							}
+						}"
+		      ></up-button>
+						<up-button
+						text="完成盘点"
+						type="primary"
+						@click="finishCheck"
+		      :disabled="finishState"
+						></up-button>
+					</view>
+				</view>
 			</view>
-		</view>
-
-		<view class="footer">
-
-			<view class="button-group">
-        <up-button
-            :text="scanningState ? '结束扫描': '开始扫描'"
-            :type="scanningState ? 'error' : 'success'"
-            @click="() => {
-					if (scanningState) {
-            endScan()
-					} else { 
-            beginScan()
-					}
-				}"
-        ></up-button>
-				<up-button
-				text="完成盘点"
-				type="primary"
-				@click="finishCheck"
-        :disabled="finishState"
-				></up-button>
-			</view>
-		</view>
+		
+			<up-modal
+			:show="confirmShow"
+			title="确认通知"
+			content='确认结束盘点吗?'
+			:showCancelButton='true'
+			@confirm="confirmEndScan"
+			@cancel="() => {confirmShow = false}"
+			/>
+		
+		<up-modal
+		    :show="confirmLogout"
+		    title="注销通知"
+		    content='确认注销吗?'
+		    :showCancelButton='true'
+		    @confirm="logout"
+		    @cancel="() => {confirmLogout = false}"
+		/>
+		
+		<up-overlay :show="showMedicalInfo">
+		  <view class="warp">
+		    <view class="header">
+		      <text>物资信息</text>
+		      <u-button @click="showMedicalInfo = false">
+		        <up-icon name="close" color="#ffffff" size="36"></up-icon>
+		      </u-button>
+		    </view>
+		    <view class="body">
+		      <u-form labelWidth="175upx">
+		
+		        <u-form-item label="物资名称:">
+		          {{medicalInfo.medicalName}}
+		        </u-form-item>
+		
+		        <u-form-item label="应有数量:">
+		          {{medicalInfo.unitNum}}
+		        </u-form-item>
+		
+		        <u-form-item label="已有数量:">
+		          {{medicalInfo.medicalDetails ? medicalInfo.medicalDetails.length : 0}}
+		        </u-form-item>
+		
+		        <u-form-item label="过期数量:">
+		          {{medicalInfo.passedItemNum ? medicalInfo.passedItemNum : 0}}
+		        </u-form-item>
+		
+		        <u-form-item label="需补充数量:">
+		          {{medicalInfo.unitNum - (medicalInfo.medicalDetails ? medicalInfo.medicalDetails.length : 0)}}
+		        </u-form-item>
+		      </u-form>
+		    </view>
+		  </view>
+		</up-overlay>
+		
+			<up-overlay :show="showInfo">
+				<view class="warp">
+					<view class="header">
+						<text>物资信息</text>
+						<u-button @click="() => {showInfo = false; uncheckedType = '1'; isSetUsed = false}" v-if="!isInitLabel">
+							<up-icon name="close" color="#ffffff" size="36"></up-icon>
+						</u-button>
+					</view>
+					<view class="body">
+						<u-form labelWidth="175upx">
+		
+							<u-form-item label="名称:">
+								{{detailInfo.medicalName}}
+							</u-form-item>
+		
+							<u-form-item label="编码:">
+								{{detailInfo.code}}
+							</u-form-item>
+		
+							<u-form-item label="科室:">
+		          {{userInfo.department}}
+							</u-form-item>
+		
+							<u-form-item label="所属急救车:">
+								{{medicalTrolleyCode}}
+							</u-form-item>
+		
+							<u-form-item label="规格:">
+								{{detailInfo.specification}}
+							</u-form-item>
+		
+							<u-form-item label="有效期:">
+								{{detailInfo.expirationDate}}
+							</u-form-item>
+		
+		        <uni-forms :modelValue="formData" label-position="top" :rules="rules" ref="form" v-if="isSetUsed">
+		          <uni-forms-item label="耗用人员：" name="nurse"  style="margin-bottom: 35upx">
+		            <uni-data-select v-model="formData.nurseId" :localdata="nurseList" placeholder="请选择耗用人员"
+		                             class="picker" type="text"></uni-data-select>
+		          </uni-forms-item>
+		
+		          <uni-forms-item label="使用日期：" name="expirationDate"  style="margin-bottom: 35upx">
+		            <uni-datetime-picker
+		                @click="() => {showTime = true}"
+		                ref="datetimePickerRef"
+		                :show="showTime"
+		                v-model="formData.expirationDate"
+		                type="date"
+		                placeholder="请选择使用日期"
+		            ></uni-datetime-picker>
+		          </uni-forms-item>
+		        </uni-forms>
+		
+						</u-form>
+					</view>
+		    <view class="footer" v-if="isInitLabel || isSetUsed">
+		      <view style="margin: auto 0; color: #00b2ff" v-if="isInitLabel">
+		        <text>{{tipsText}}</text>
+		      </view>
+		
+		      <view class="button-group">
+		        <up-button
+		            text="使用登记"
+		            type="primary"
+		            @click="setUsedState"
+		            v-if="isSetUsed"
+		        ></up-button>
+		      </view>
+		    </view>
+				</view>
+			</up-overlay>
+		
+		<up-overlay :show="showUnchecked">
+		  <view class="warp">
+		    <view class="header">
+		      <text>类型选择</text>
+		      <u-button @click="closeUncheckedConfirm">
+		        <up-icon name="close" color="#ffffff" size="36"></up-icon>
+		      </u-button>
+		    </view>
+		    <view class="body">
+		      <up-radio-group
+		          v-model="uncheckedType"
+		          placement="column"
+		      >
+		        <up-radio
+		            :customStyle="{marginBottom: '8px'}"
+		            v-for="(item, index) in uncheckedTypes"
+		            :key="index"
+		            :label="item.label"
+		            :name="item.name"
+		            @change="radioChange"
+		        >
+		        </up-radio>
+		      </up-radio-group>
+		    </view>
+		    <view class="footer">
+		      <view class="button-group">
+		        <up-button
+		            text="取消"
+		            type="primary"
+		            @click="closeUncheckedConfirm"
+		        ></up-button>
+		        <up-button
+		            text="确认"
+		            type="primary"
+		            @click="changeUnchecked"
+		        ></up-button>
+		      </view>
+		    </view>
+		  </view>
+		</up-overlay>
+		
+		<up-overlay :show="showTips">
+		  <view class="warp">
+		    <view class="header">
+		      <text>{{ tipsTitle }}</text>
+		      <u-button @click="showTips = false">
+		        <up-icon name="close" color="#ffffff" size="36"></up-icon>
+		      </u-button>
+		    </view>
+		    <view class="body">
+		      <view style="margin: auto 0">
+		        <text>{{ tipsText }}</text>
+		      </view>
+		      <view class="imgCss" style="margin: 25upx 0">
+		        <image src="../../static/deviceInstruction.png" style="width:600upx; height: 500upx; margin: 0 auto"></image>
+		      </view>
+		    </view>
+		    <view class="footer">
+		      <view class="header">
+		        <view>
+		          <text style="font-size: 36upx">
+		            盘点扫描范围为：
+		          </text>
+		          <text style="color: #ff0000; font-size: 36upx">
+		            2米
+		          </text>
+		        </view>
+		      </view>
+		    </view>
+		  </view>
+		</up-overlay>
 	</view>
-
-	<up-modal
-	:show="confirmShow"
-	title="确认通知"
-	content='确认结束盘点吗?'
-	:showCancelButton='true'
-	@confirm="confirmEndScan"
-	@cancel="() => {confirmShow = false}"
-	/>
-
-  <up-modal
-      :show="confirmLogout"
-      title="注销通知"
-      content='确认注销吗?'
-      :showCancelButton='true'
-      @confirm="logout"
-      @cancel="() => {confirmLogout = false}"
-  />
-
-  <up-overlay :show="showMedicalInfo">
-    <view class="warp">
-      <view class="header">
-        <text>物资信息</text>
-        <u-button @click="showMedicalInfo = false">
-          <up-icon name="close" color="#ffffff" size="36"></up-icon>
-        </u-button>
-      </view>
-      <view class="body">
-        <u-form labelWidth="175upx">
-
-          <u-form-item label="物资名称:">
-            {{medicalInfo.medicalName}}
-          </u-form-item>
-
-          <u-form-item label="应有数量:">
-            {{medicalInfo.unitNum}}
-          </u-form-item>
-
-          <u-form-item label="已有数量:">
-            {{medicalInfo.medicalDetails ? medicalInfo.medicalDetails.length : 0}}
-          </u-form-item>
-
-          <u-form-item label="过期数量:">
-            {{medicalInfo.passedItemNum ? medicalInfo.passedItemNum : 0}}
-          </u-form-item>
-
-          <u-form-item label="需补充数量:">
-            {{medicalInfo.unitNum - (medicalInfo.medicalDetails ? medicalInfo.medicalDetails.length : 0)}}
-          </u-form-item>
-        </u-form>
-      </view>
-    </view>
-  </up-overlay>
-
-	<up-overlay :show="showInfo">
-		<view class="warp">
-			<view class="header">
-				<text>物资信息</text>
-				<u-button @click="() => {showInfo = false; uncheckedType = '1'; isSetUsed = false}" v-if="!isInitLabel">
-					<up-icon name="close" color="#ffffff" size="36"></up-icon>
-				</u-button>
-			</view>
-			<view class="body">
-				<u-form labelWidth="175upx">
-
-					<u-form-item label="名称:">
-						{{detailInfo.medicalName}}
-					</u-form-item>
-
-					<u-form-item label="编码:">
-						{{detailInfo.code}}
-					</u-form-item>
-
-					<u-form-item label="科室:">
-            {{userInfo.department}}
-					</u-form-item>
-
-					<u-form-item label="所属急救车:">
-						{{medicalTrolleyCode}}
-					</u-form-item>
-
-					<u-form-item label="规格:">
-						{{detailInfo.specification}}
-					</u-form-item>
-
-					<u-form-item label="有效期:">
-						{{detailInfo.expirationDate}}
-					</u-form-item>
-
-          <uni-forms :modelValue="formData" label-position="top" :rules="rules" ref="form" v-if="isSetUsed">
-            <uni-forms-item label="耗用人员：" name="nurse"  style="margin-bottom: 35upx">
-              <uni-data-select v-model="formData.nurseId" :localdata="nurseList" placeholder="请选择耗用人员"
-                               class="picker" type="text"></uni-data-select>
-            </uni-forms-item>
-
-            <uni-forms-item label="使用日期：" name="expirationDate"  style="margin-bottom: 35upx">
-              <uni-datetime-picker
-                  @click="() => {showTime = true}"
-                  ref="datetimePickerRef"
-                  :show="showTime"
-                  v-model="formData.expirationDate"
-                  type="date"
-                  placeholder="请选择使用日期"
-              ></uni-datetime-picker>
-            </uni-forms-item>
-          </uni-forms>
-
-				</u-form>
-			</view>
-      <view class="footer" v-if="isInitLabel || isSetUsed">
-        <view style="margin: auto 0; color: #00b2ff" v-if="isInitLabel">
-          <text>{{tipsText}}</text>
-        </view>
-
-        <view class="button-group">
-          <up-button
-              text="使用登记"
-              type="primary"
-              @click="setUsedState"
-              v-if="isSetUsed"
-          ></up-button>
-        </view>
-      </view>
-		</view>
-	</up-overlay>
-
-  <up-overlay :show="showUnchecked">
-    <view class="warp">
-      <view class="header">
-        <text>类型选择</text>
-        <u-button @click="closeUncheckedConfirm">
-          <up-icon name="close" color="#ffffff" size="36"></up-icon>
-        </u-button>
-      </view>
-      <view class="body">
-        <up-radio-group
-            v-model="uncheckedType"
-            placement="column"
-        >
-          <up-radio
-              :customStyle="{marginBottom: '8px'}"
-              v-for="(item, index) in uncheckedTypes"
-              :key="index"
-              :label="item.label"
-              :name="item.name"
-              @change="radioChange"
-          >
-          </up-radio>
-        </up-radio-group>
-      </view>
-      <view class="footer">
-        <view class="button-group">
-          <up-button
-              text="取消"
-              type="primary"
-              @click="closeUncheckedConfirm"
-          ></up-button>
-          <up-button
-              text="确认"
-              type="primary"
-              @click="changeUnchecked"
-          ></up-button>
-        </view>
-      </view>
-    </view>
-  </up-overlay>
-
-  <up-overlay :show="showTips">
-    <view class="warp">
-      <view class="header">
-        <text>{{ tipsTitle }}</text>
-        <u-button @click="showTips = false">
-          <up-icon name="close" color="#ffffff" size="36"></up-icon>
-        </u-button>
-      </view>
-      <view class="body">
-        <view style="margin: auto 0">
-          <text>{{ tipsText }}</text>
-        </view>
-        <view class="imgCss" style="margin: 25upx 0">
-          <image src="../../static/deviceInstruction.png" style="width:600upx; height: 500upx; margin: 0 auto"></image>
-        </view>
-      </view>
-      <view class="footer">
-        <view class="header">
-          <view>
-            <text style="font-size: 36upx">
-              盘点扫描范围为：
-            </text>
-            <text style="color: #ff0000; font-size: 36upx">
-              2米
-            </text>
-          </view>
-        </view>
-      </view>
-    </view>
-  </up-overlay>
 </template>
 
 <script setup>
@@ -546,7 +548,6 @@ const searchArr = ref([
 
 // 物资盘点完成，设置显示隐藏
 let isCompleteShow = ref(false)
-
 const radioChange = (value) => {
   uncheckedType.value = value
 }
@@ -649,7 +650,7 @@ const beginScan = () => {
 	setPower(power)
 	const res1 = readMachine(true)
 	uni.showToast({
-	  title: res1,
+	  title: res1+"设备连接失败",
 	  icon: 'none',
 	  duration: 2000
 	});
@@ -700,6 +701,7 @@ const finishScan = (isDi) => {
   endMachine(isDi)
   selectionChange(keyword.value, selectIndex.value)
   scanningState.value = false
+  clearTimeout(changeTimeout);
 }
 
 const getUncheckedInfoList2nd = (value) => {
@@ -1150,6 +1152,9 @@ function keyupScan(event){
 		}
 	}
 }
+function expandSearch(){
+	showSearch.value = !showSearch.value
+}
 
 onShow(()=>{
   plus.key.addEventListener('keydown',keydownScan)
@@ -1370,7 +1375,7 @@ watch([handelNum, totalNum], ([newHandelNum, newTotalNum]) => {
 .main {
 	margin: 10upx;
 	padding: 15upx 25upx;
-	height: 100%;
+	height: 98%;
 	display: flex;
 	flex-direction: column;
 	box-shadow: 0 0 3upx #00000075;

@@ -323,12 +323,18 @@ onHide(()=>{
 			</view>
 
 			<view class="returnBtnBox">
-				<view class="returnBtnCss">
-					<view @click="beginScan()">扫描</view>
-				</view>
-				<view class="returnBtnCss">
+				<!-- <view class="returnBtnCss"> -->
+					<!-- <view @click="beginScan()">扫描</view> -->
+					<up-button @click="beginScan()" size="large" shape="circle"  color="rgba(137, 207, 251, 1)">
+						扫描
+					</up-button>
+					<up-button @click="handleReturn" size="large" shape="circle"  color="rgba(137, 207, 251, 1)">
+						返回
+					</up-button>
+				<!-- </view> -->
+				<!-- <view class="returnBtnCss">
 					<view @click="handleReturn">返回</view>
-				</view>
+				</view> -->
 				<!-- <view class="button-group">
 					<up-button
 						text="扫描"

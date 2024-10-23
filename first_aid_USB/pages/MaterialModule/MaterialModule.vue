@@ -169,7 +169,7 @@ function inventoryDetail(data){
 				</view>
 				<view class="MaterialInfoBox" @click="navToDetailInfo">
 					<span class="titleCss">{{navEnum.materiralInfo}} :</span>
-					<span class="titleCss" style="float: right;">查看详情</span>
+					<span class="titleCss" style="float: right;">点击查看详情</span>
 					<scroll-view class="scroll-container1" scroll-y="true">
 						<view v-show="!isLoading">
 							<view>

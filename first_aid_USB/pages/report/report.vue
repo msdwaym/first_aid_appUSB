@@ -177,80 +177,88 @@
 </script>
 
 <template>
-  <firstAidNavigation
-      :isReturn="false"
-      :nav-text=navEnum.report
-  />
-
-  <view style="margin-top:160rpx ;">
-    <view class="tabs">
-      <uni-search-bar v-model="searchValue"
-                      class="SearchBoxCss"
-                      placeholder="请输入急救车编码"
-                      radius="100"
-                      cancelButton="none"
-                      @clear="clear"
-                      @confirm="search"
-                      @input="input">
-      </uni-search-bar>
-      <view>
-        <u-tabs :activeStyle="{
-				            color: 'rgba(137, 207, 251, 1)',
-				            fontWeight: 'bold',
-				            transform: 'scale(1.05)'
-				        }"
-                :inactiveStyle="{
-				            color: '#606266',
-				            transform: 'scale(1)'
-				        }"
-                :list="tabsList"
-                lineColor="rgba(137, 207, 251, 1)"
-                style="display: inline-block;width: 400rpx;"
-                @change="tabChange">
-        </u-tabs>
-        <view style="margin: 20rpx 13rpx; width: 351px;">
-          <uni-section :title="'日期时间范围用法：' + '[' + datetimerange + ']' " type="line"></uni-section>
-          <view class="example-body">
-            <uni-datetime-picker v-model="datetimerange" rangeSeparator="至" type="datetimerange" @change="change"/>
-          </view>
-        </view>
-      </view>
-      <view class="tableBoxCss">
-        <uni-table border emptyText="暂无更多数据" stripe style="font-size: 10rpx;">
-          <!-- 表头行 -->
-          <uni-tr>
-
-            <uni-th align="center" style="width: 40rpx;">盘点时间</uni-th>
-            <uni-th align="center" style="width: 80rpx;">盘点人</uni-th>
-            <uni-th align="center" style="width: 12rpx;">急救车</uni-th>
-            <uni-th align="center" style="width: 60rpx;">已处理</uni-th>
-          </uni-tr>
-          <!-- 表格数据行 -->
-          <uni-tr v-for="record in inventoryRecords" :key="record.id" @click="checkInfo(record)">
-
-            <uni-td align="center">{{ record.inventoryTime }}</uni-td>
-            <uni-td align="center">{{ record.nurseName }}</uni-td>
-            <uni-td align="center">{{ record.medicalTrolleyCode }}</uni-td>
-            <uni-td align="center">{{ record.totalNum }}</uni-td> <!-- 如果为null则显示'无' -->
-          </uni-tr>
-
-        </uni-table>
-      </view>
-	<view class="pageButtonCss">
-		<view class="returnPageCss">
-			<view @click="returnPage">上一页</view>
-		</view>
-		
-		<view class="nextPageCss">
-			<view @click="nextPage">下一页</view>
-		</view>  
-	</view>
-	<view class="pageInfoCss">
-		<span>第<span class="fontColor">{{currentPage}}</span>页</span>
-		<span>共<span class="fontColor">{{totalRecords}}</span>条</span>
-	</view>
-
-    </view>
+  <view style=" overflow: hidden;">
+	  <firstAidNavigation
+	      :isReturn="false"
+	      :nav-text="navEnum.report"
+	  />
+	  
+	  <view style="margin-top:140rpx;">
+	    <view class="tabs">
+	      <uni-search-bar v-model="searchValue"
+	                      class="SearchBoxCss"
+	                      placeholder="请输入急救车编码"
+	                      radius="100"
+	                      cancelButton="none"
+	                      @clear="clear"
+	                      @confirm="search"
+	                      @input="input">
+	      </uni-search-bar>
+	      <view>
+	        <u-tabs :activeStyle="{
+	  				            color: 'rgba(137, 207, 251, 1)',
+	  				            fontWeight: 'bold',
+	  				            transform: 'scale(1.05)'
+	  				        }"
+	                :inactiveStyle="{
+	  				            color: '#606266',
+	  				            transform: 'scale(1)'
+	  				        }"
+	                :list="tabsList"
+	                lineColor="rgba(137, 207, 251, 1)"
+	                style="display: inline-block;width: 400rpx;"
+	                @change="tabChange">
+	        </u-tabs>
+	        <view style="margin: 20rpx 13rpx; width: 351px;">
+	          <uni-section :title="'日期时间范围用法：' + '[' + datetimerange + ']' " type="line"></uni-section>
+	          <view class="example-body">
+	            <uni-datetime-picker v-model="datetimerange" rangeSeparator="至" type="datetimerange" @change="change"/>
+	          </view>
+	        </view>
+	      </view>
+	      <view class="tableBoxCss">
+	        <uni-table border emptyText="暂无更多数据" stripe style="font-size: 10rpx;">
+	          <!-- 表头行 -->
+	          <uni-tr>
+	  
+	            <uni-th align="center" style="width: 40rpx;">盘点时间</uni-th>
+	            <uni-th align="center" style="width: 80rpx;">盘点人</uni-th>
+	            <uni-th align="center" style="width: 12rpx;">急救车</uni-th>
+	            <uni-th align="center" style="width: 60rpx;">已处理</uni-th>
+	          </uni-tr>
+	          <!-- 表格数据行 -->
+	          <uni-tr v-for="record in inventoryRecords" :key="record.id" @click="checkInfo(record)">
+	  
+	            <uni-td align="center">{{ record.inventoryTime }}</uni-td>
+	            <uni-td align="center">{{ record.nurseName }}</uni-td>
+	            <uni-td align="center">{{ record.medicalTrolleyCode }}</uni-td>
+	            <uni-td align="center">{{ record.totalNum }}</uni-td> <!-- 如果为null则显示'无' -->
+	          </uni-tr>
+	  
+	        </uni-table>
+	      </view>
+	  	<view class="pageButtonCss">
+	  		<view class="returnPageCss">
+	  			<!-- <view @click="returnPage">上一页</view> -->
+				<up-button @click="returnPage" size="mini" shape="circle"  color="rgba(137, 207, 251, 1)">
+					上一页
+				</up-button>
+	  		</view>
+	  		
+	  		<view class="nextPageCss">
+	  			<!-- <view @click="nextPage">下一页</view> -->
+				<up-button @click="nextPage" size="mini" shape="circle"  color="rgba(137, 207, 251, 1)">
+					下一页
+				</up-button>
+	  		</view>  
+	  	</view>
+	  	<view class="pageInfoCss">
+	  		<span>第<span class="fontColor">{{currentPage}}</span>页</span>
+	  		<span>共<span class="fontColor">{{totalRecords}}</span>条</span>
+	  	</view>
+	  
+	    </view>
+	  </view>
   </view>
 </template>
 
@@ -276,13 +284,13 @@
 .returnPageCss{
 	width:150rpx;
 	float: left;
-	background-color:$main-blue;
+	// background-color:$main-blue;
 	text-align: center;
 }
 .nextPageCss{
 	width: 150rpx;
 	float:right;
-	background-color:$main-blue;
+	// background-color:$main-blue;
 	text-align: center;
 }
 .pageInfoCss{
